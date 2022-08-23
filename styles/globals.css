@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@font-face {
+  font-family: "freigeist";
+  src: url("/fonts/freigeist-light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "freigeist";
+  src: url("/fonts/freigeist-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "freigeist";
+  src: url("/fonts/freigeist-medium.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "freigeist";
+  src: url("/fonts/freigeist-bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PokemonGb";
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/PokemonGb-RAeo.ttf") format("truetype");
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@700&display=swap");
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.animated-main-browse-container {
+  animation-name: container-animation;
+  animation-duration: 1s;
+  animation-delay: 0s;
+  animation-fill-mode: backwards;
+}
+
+@keyframes text-animation {
+  from {
+    top: 500px;
+    position: absolute;
+  }
+  to {
+    top: 46px;
+    position: absolute;
+  }
+}
+
+@keyframes container-animation {
+  from {
+    top: 500px;
+    position: absolute;
+  }
+  to {
+    top: 60px;
+    position: absolute;
+  }
+
+  /* 0% { */
+  /*   display: none; */
+  /*   opacity: 0; */
+  /* } */
+
+  /* 1% { */
+  /*   display: block; */
+  /*   opacity: 0; */
+  /* } */
+
+  /* 100% { */
+  /*   display: block; */
+  /*   opacity: 1; */
+  /* } */
+}
+
+.walletconnect-modal__mobile__toggle a {
+  color: black !important;
+  cursor: pointer;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
