@@ -91,6 +91,23 @@ const updateProfile = async (data) => {
   return repository.saveDoc(COLLECTIONS.USERS, existingUser);
 };
 
+const saveDID = async (address, did) => {
+  const existingUser = await repository.findOneDoc(COLLECTIONS.USERS, {
+    address: address.toLowerCase(),
+  });
+
+  if (!existingUser) {
+    throw new Error("cant find user to update did data");
+  }
+
+  if (!existingUser.dids) {
+    existingUser.dids = [];
+  }
+  existingUser.dids.push(did);
+
+  return repository.saveDoc(COLLECTIONS.USERS, existingUser);
+};
+
 const exports = {
   fetchProfileInfoForProjectPage,
   fetchEns,
@@ -99,5 +116,6 @@ const exports = {
   updateProfile,
   resolveAddress,
   resolveEnsAaddress,
+  saveDID,
 };
 export default exports;

@@ -6,6 +6,10 @@ const get6DigitOfAccount = (account) => {
   if (!account) return "";
   return account.substr(0, 5) + "..." + account.substr(account.length - 4);
 };
+const get6DigitOfDid = (did) => {
+  if (!did) return "";
+  return did.substr(0, 9) + "..." + did.substr(did.length - 4);
+};
 
 function CopyMe(TextToCopy) {
   var TempText = document.createElement("input");
@@ -126,5 +130,6 @@ const exports = {
   isValidateEmail,
   getGradientBackgroundByAddress,
   resolveIPFSLink,
+  get6DigitOfDid,
 };
 export default exports;

@@ -27,8 +27,16 @@ import ProjectListWrapper from "@src/pageviews/people/[address]/ProjectListWrapp
 import CoverSection from "@src/pageviews/people/[address]/CoverSection";
 import SendPOFSection from "@src/pageviews/people/[address]/SendPOFSection";
 import useErrorHandler from "@src/shared/error/useErrorHandler";
-import ProfileFollowButton from "../../../shared/follow/ProfileFollowButton";
+import ProfileFollowButton from "@src/shared/follow/ProfileFollowButton";
 import Router, { useRouter } from "next/router";
+
+import dynamic from "next/dynamic";
+const CeramicIdentitySection = dynamic(
+  import("@src/pageviews/people/[address]/CeramicIdentitySection"),
+  {
+    ssr: false,
+  }
+);
 
 const ProfilePageView = ({ profile: _profile, initialAddress }) => {
   const errorHandler = useErrorHandler();
