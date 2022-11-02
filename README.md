@@ -29,7 +29,9 @@ Want to learn more?
 
 We are using Ceramic datamodel/schema to generate VC wich fits [W3C DID Verifiable Credentials standards](https://www.w3.org/TR/vc-data-model/)
 
-You can read more [ here ] ( https://github.com/ceramicstudio/datamodels/tree/main/models/verifiable-credentials )
+You can read more [here](https://github.com/ceramicstudio/datamodels/tree/main/models/verifiable-credentials)
+
+- You can find lib file [here](https://github.com/twocents-os/twocents-os/blob/main/src/libs/issue-vc.js)
 
 ## Join
 
