@@ -25,6 +25,14 @@ Want to learn more?
 - [System Design](https://twocents.gitbook.io/docs/system-design)
 - [Project Structure](https://twocents.gitbook.io/docs/project-structure)
 
+## Lib - generate verifiable credentials
+
+We are using Ceramic datamodel/schema to generate VC wich fits [W3C DID Verifiable Credentials standards](https://www.w3.org/TR/vc-data-model/)
+
+You can read more [ here ] ( https://github.com/ceramicstudio/datamodels/tree/main/models/verifiable-credentials )
+
+## Join
+
 - Join and Text us on [discord](https://discord.com/invite/Sp9qSmhsgJ)
 
 ## Setup for contribution
