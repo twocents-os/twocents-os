@@ -16,6 +16,7 @@ import {
   faChartLine,
   faHistory,
   faLink,
+  faPaperclip,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faRectangleList,
@@ -30,13 +31,7 @@ import useErrorHandler from "@src/shared/error/useErrorHandler";
 import ProfileFollowButton from "@src/shared/follow/ProfileFollowButton";
 import Router, { useRouter } from "next/router";
 
-import dynamic from "next/dynamic";
-const CeramicIdentitySection = dynamic(
-  import("@src/pageviews/people/[address]/CeramicIdentitySection"),
-  {
-    ssr: false,
-  }
-);
+import VerifiedCredentials from "@src/pageviews/people/[address]/ProfileTabSection/VerifiedCredentials";
 
 const ProfilePageView = ({ profile: _profile, initialAddress }) => {
   const errorHandler = useErrorHandler();
@@ -139,6 +134,20 @@ const ProfilePageView = ({ profile: _profile, initialAddress }) => {
       icon: faLink,
       count: profile?.userData?.links?.length,
     },
+    {
+      id: 7,
+      queryId: "vcs",
+      title: "Verified Credentials",
+      component: VerifiedCredentials,
+      props: {
+        vcs: profile?.vcs,
+      },
+      tabItemProps: {
+        display: ["block", "block", "block"],
+      },
+      icon: faPaperclip,
+      count: profile?.vcs?.length,
+    },
   ];
 
   const defaultTab = tabs.find((tab) => tab.isDefault);
@@ -222,6 +231,14 @@ const ProfilePageView = ({ profile: _profile, initialAddress }) => {
           `/api/projects/fetch-projects-of-address?address=${updatedProfile.address}`
         );
         updatedProfile.projects = response.projects;
+        setProfile({ ...updatedProfile });
+
+        //verified credentials - vcs
+        response = await api.call(
+          "get",
+          `/api/did/fetch-vcs-of-address?address=${updatedProfile.address}`
+        );
+        updatedProfile.vcs = response.vcs;
         setProfile({ ...updatedProfile });
 
         //poap data

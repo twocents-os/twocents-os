@@ -1,4 +1,5 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+//Depricated - need to remove
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box } from "@chakra-ui/react";
 import React from "react";
 import ActionsList from "@src/pageviews/people/[address]/ProfileTabSection/ActionsList";
 import ProjectList from "@src/pageviews/people/[address]/ProfileTabSection/ProjectList";

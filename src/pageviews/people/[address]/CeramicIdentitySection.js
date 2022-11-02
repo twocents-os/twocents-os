@@ -1,4 +1,21 @@
-import { Box, Flex, Text, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Button,
+  chakra,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
 import UIButton from "@src/shared/ui-button";
 import React, { useEffect, useState } from "react";
 import { EthereumAuthProvider, ThreeIdConnect } from "@3id/connect";
@@ -8,13 +25,137 @@ import { TileDocument } from "@ceramicnetwork/stream-tile";
 import {
   useViewerConnection,
   useClient,
-  useViewerID,
   useViewerRecord,
 } from "@self.id/framework";
 import { usePageState } from "@src/shared/state";
 import { useApi } from "@src/shared/api";
 import useErrorHandler from "@src/shared/error/useErrorHandler";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import issueVerifiedCredential from "@src/libs/issue-vc";
+
+const VerifiedCredentialModal = ({ onClose, isOpen, profile, setDID }) => {
+  const errorHandler = useErrorHandler();
+  const placeTag = "profile-VerifiedCredentialModal";
+  const [connection] = useViewerConnection();
+  const [skills, setSkills] = useState("");
+  const [evidenceUrl, setEvidenceUrl] = useState("");
+  const [evidenceDescription, setEvidenceDescription] = useState("");
+  const client = useClient();
+  const [state] = usePageState();
+  const api = useApi();
+  const toast = useToast();
+
+  const handleSubmit = async () => {
+    try {
+      const cleanSkills = skills.split(",").map((s) => s.trim());
+      const { credentialId, doc: docContent } = issueVerifiedCredential({
+        issuerEthAddress: state?.currentAddress,
+        targetEthAddress: profile?.address,
+        issuanceDate: new Date().toISOString(),
+        meta: {
+          skills: cleanSkills,
+          evidenceUrl: evidenceUrl,
+          evidenceDescription: evidenceDescription,
+        },
+      });
+
+      const doc = await TileDocument.create(client.ceramic, docContent, {
+        schema:
+          "k3y52l7qbv1frxo5510cruhkluijtav39g4vacian4lrh7bxs8vk0b2w7pjmilqtc",
+      });
+
+      const result = await api.call("POST", `/api/did/save-vc`, {
+        doc: doc.content,
+        docId: doc.id.toString(),
+        credentialId,
+        issuerEthAddress: state?.currentAddress,
+        targetEthAddress: profile?.address,
+      });
+      console.log("LOG:", result);
+      toast({
+        title: `Submitted Verified Credencitials`,
+        description: `Verified Credentials Created`,
+        position: "bottom-right",
+        isClosable: true,
+        variant: "solid",
+        status: "success",
+      });
+      onClose();
+    } catch (error) {
+      errorHandler(error, [placeTag], {}, true);
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Create Verified Credentials</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <CeramicConnectButton profile={profile} setDID={setDID} />
+          {connection.status === "connected" && (
+            <Box>
+              <Box mt={"20px"}>
+                <Text fontSize={"16px"} fontWeight={700}>
+                  Skills <chakra.span color={"red"}> *</chakra.span>
+                </Text>
+
+                <Input
+                  mt={"20px"}
+                  backgroundColor="white"
+                  color="black"
+                  placeholder="Skills separated with comma"
+                  type="text"
+                  value={skills || ""}
+                  onChange={(e) => setSkills(e.target.value)}
+                />
+              </Box>
+              <Box mt={"20px"}>
+                <Text fontSize={"16px"} fontWeight={700}>
+                  Evidence Url <chakra.span color={"red"}> *</chakra.span>
+                </Text>
+
+                <Input
+                  mt={"20px"}
+                  backgroundColor="white"
+                  color="black"
+                  placeholder="Evidence URL"
+                  type="text"
+                  value={evidenceUrl || ""}
+                  onChange={(e) => setEvidenceUrl(e.target.value)}
+                />
+              </Box>
+              <Box mt={"20px"}>
+                <Text fontSize={"16px"} fontWeight={700}>
+                  Evidence Description{" "}
+                  <chakra.span color={"red"}> *</chakra.span>
+                </Text>
+
+                <Textarea
+                  mt={"20px"}
+                  backgroundColor="white"
+                  color="black"
+                  placeholder="Evidence description"
+                  type="text"
+                  value={evidenceDescription || ""}
+                  onChange={(e) => setEvidenceDescription(e.target.value)}
+                />
+              </Box>
+            </Box>
+          )}
+        </ModalBody>
+
+        <ModalFooter>
+          <Button type="secondary" mr={"10px"} onClick={onClose}>
+            Close
+          </Button>
+          <UIButton onClick={handleSubmit}>Submit</UIButton>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
 
 function CeramicConnectButton({ profile, setDID }) {
   const errorHandler = useErrorHandler();
@@ -50,7 +191,7 @@ function CeramicConnectButton({ profile, setDID }) {
           status: "success",
         });
       } catch (error) {
-        errorHandler(error, [placeTag], {}, false);
+        errorHandler(error, [placeTag], {}, true);
       }
     };
     saveDID();
@@ -58,7 +199,7 @@ function CeramicConnectButton({ profile, setDID }) {
 
   return (
     <>
-      {/* {connection.status === "connected" && (
+      {connection.status === "connected" && (
         <UIButton
           onClick={() => {
             disconnect();
@@ -66,7 +207,7 @@ function CeramicConnectButton({ profile, setDID }) {
         >
           Disconnect
         </UIButton>
-      )} */}
+      )}
 
       {connection.status !== "connected" && (
         <UIButton
@@ -113,6 +254,12 @@ const CeramicIdentitySection = ({ profile }) => {
   const [state] = usePageState();
   const api = useApi();
   const toast = useToast();
+  const client = useClient();
+  const {
+    isOpen: isVerifiedCredentialModalOpened,
+    onOpen: onVerifiedCredentialModalOpen,
+    onClose: onVerifiedCredentialModalClose,
+  } = useDisclosure();
 
   useEffect(() => {
     const checkIfProfileIsMine = () => {
@@ -123,8 +270,9 @@ const CeramicIdentitySection = ({ profile }) => {
     checkIfProfileIsMine();
   }, [profile?.address, state?.currentAddress]);
 
-  const handleGenerateVC = () => {
-    alert("soon");
+  const handleGenerateVC = async () => {
+    onVerifiedCredentialModalOpen();
+    return;
   };
 
   useEffect(() => {
@@ -156,10 +304,7 @@ const CeramicIdentitySection = ({ profile }) => {
   };
 
   return (
-    <Flex mt="12px">
-      {isMyProfile && !did && (
-        <CeramicConnectButton profile={profile} setDID={setDID} />
-      )}
+    <Flex mt="12px" alignItems={"center"}>
       {isMyProfile && did && (
         <Flex
           border="1px solid black"
@@ -176,11 +321,18 @@ const CeramicIdentitySection = ({ profile }) => {
         </Flex>
       )}
       {!isMyProfile && (
-        <Box>
+        <Box ml="10px">
           <UIButton onClick={handleGenerateVC}>Give VC</UIButton>
         </Box>
       )}
+      <VerifiedCredentialModal
+        isOpen={isVerifiedCredentialModalOpened}
+        onClose={onVerifiedCredentialModalClose}
+        profile={profile}
+        setDID={setDID}
+      />
     </Flex>
   );
 };
+
 export default CeramicIdentitySection;

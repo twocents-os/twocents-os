@@ -13,6 +13,7 @@ export const COLLECTIONS = {
   POF: "pof",
   PROJECT_FIRENDS: "project-friends",
   FEEDBACKS: "feedbacks",
+  VC: "verified-credentials",
 };
 
 const repository = {
