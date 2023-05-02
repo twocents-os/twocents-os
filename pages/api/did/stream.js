@@ -5,7 +5,10 @@ async function handler(req, res) {
   const { s: streamId } = req.query;
   const ceramic = new CeramicClient("https://ceramic.twocents.so");
   const data = await ceramic.loadStream(streamId);
-  console.log(data.content);
+  //note -> for checking we need to extract conroller DID from metadata
+  // - get list of wallet addresses under this DID
+  // - check if doc issuer eth address equals one of addresses from list
+  console.log(data.metadata);
 
   res.status(200).json({ data: { doc: data.content } });
 }
