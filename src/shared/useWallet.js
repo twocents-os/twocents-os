@@ -140,5 +140,6 @@ export const useWallet = () => {
     mintPOF,
     buyBack,
     resolveAddress,
+    provider,
   };
 };

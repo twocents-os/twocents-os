@@ -1,3 +1,4 @@
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Input,
   InputGroup,
@@ -5,17 +6,34 @@ import {
   Center,
   Box,
   Flex,
+  Select,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
+  Button,
 } from "@chakra-ui/react";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { usePageState } from "@src/shared/state";
+import { useState } from "react";
 
 export default function SearchBar({ ...props }) {
   const [state, methods] = usePageState();
+  const [selectedSearchOption, setSelectedSearchOption] = useState("ETH");
 
   const handleSearchKeydown = (e) => {
     if (e.key === "Enter") {
-      window.location.href = `/people/${state.searchText}`;
+      if (selectedSearchOption === "ETH") {
+        window.location.href = `/people/${state.searchText}`;
+      }
+      if (selectedSearchOption === "Keyword") {
+        window.location.href = `/credentials?searchTerm=${state.searchText}`;
+      }
     }
   };
 
@@ -54,6 +72,24 @@ export default function SearchBar({ ...props }) {
           css={{ "::placeholder": { color: "grey", fontStyle: "italic" } }}
         />
       </InputGroup>
+      <Menu>
+        <MenuButton
+          w={selectedSearchOption === "ETH" ? "100px" : "150px"}
+          ml="6px"
+          as={Button}
+          rightIcon={<ChevronDownIcon />}
+        >
+          {selectedSearchOption}
+        </MenuButton>
+        <MenuList>
+          <MenuItem onClick={() => setSelectedSearchOption("ETH")}>
+            ETH
+          </MenuItem>
+          <MenuItem onClick={() => setSelectedSearchOption("Keyword")}>
+            Keyword
+          </MenuItem>
+        </MenuList>
+      </Menu>
     </Center>
   );
 }

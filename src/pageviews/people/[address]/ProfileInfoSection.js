@@ -6,7 +6,7 @@ import frontUtils from "@src/shared/front-utils";
 import { usePageState } from "@src/shared/state";
 import VerifiedTick from "@src/pageviews/people/[address]/VerifiedTick";
 import ProfileSnapshotSpaceFollow from "@src/pageviews/people/[address]/ProfileSnapshotSpaceFollow";
-import CeramicIdentitySection from "@src/pageviews/people/[address]/CeramicIdentitySection";
+import CeramicIdentitySectionV2 from "./CeramicIdentitySectionV2";
 
 const ProfileInfoSection = ({ profile, ...props }) => {
   const [state] = usePageState();
@@ -51,7 +51,7 @@ const ProfileInfoSection = ({ profile, ...props }) => {
       {profile.ens && (
         <Text fontSize={["18px", "18px", "24px"]}>{profile.ens}</Text>
       )}
-      <CeramicIdentitySection profile={profile} />
+      <CeramicIdentitySectionV2 profile={profile} />
       <Flex alignItems={"center"} mt="10px">
         <Box display={"inline-block"}>
           <Flex

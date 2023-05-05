@@ -12,7 +12,6 @@ import { WagmiProvider, chain, defaultChains } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { WalletLinkConnector } from "wagmi/connectors/walletLink";
-import { Provider as CeramicProvider } from "@self.id/framework";
 
 config.autoAddCss = false;
 
@@ -94,20 +93,13 @@ function MyApp({ Component, pageProps }) {
         />
         <meta name="theme-color" content="#FF0000" />
       </Head>
-      <CeramicProvider
-        client={{
-          ceramic: "https://ceramic.twocents.so",
-          connectNetwork: "testnet-clay",
-        }}
-      >
-        <WagmiProvider autoConnect={true} connectors={connectors}>
-          <StateProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </StateProvider>
-        </WagmiProvider>
-      </CeramicProvider>
+      <WagmiProvider autoConnect={true} connectors={connectors}>
+        <StateProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </StateProvider>
+      </WagmiProvider>
     </>
   );
 }

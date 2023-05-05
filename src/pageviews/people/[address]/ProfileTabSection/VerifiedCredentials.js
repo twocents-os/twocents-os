@@ -32,10 +32,14 @@ const VerifiedCredentials = ({ vcs, ...props }) => {
             >
               <Box>
                 <chakra.span fontWeight={"700"}>From: </chakra.span>{" "}
-                {vc.issuerEthAddress}
+                {vc.issuerAddress}
+              </Box>
+              <Box mt="12px" whiteSpace={"pre-wrap"}>
+                <chakra.span fontWeight={"700"}>Subject: </chakra.span>
+                {vc.credentialSubject}
               </Box>
               <Wrap mt="20px">
-                {vc.doc.credentialSubject.meta.skills
+                {vc.skills
                   .map((skill, index) => {
                     const bgColors = [
                       "#feecb0",
@@ -68,19 +72,15 @@ const VerifiedCredentials = ({ vcs, ...props }) => {
                   ))}
               </Wrap>
               <Box mt="12px">
-                <chakra.span fontWeight={"700"}>Evidence: </chakra.span>
+                <chakra.span fontWeight={"700"}>Credential: </chakra.span>
                 <Link
                   isExternal={true}
                   target="_blank"
-                  href={vc.doc.credentialSubject.meta.evidenceUrl}
+                  href={`/credentials/${vc._id}`}
                   color="blue.700"
                 >
-                  {vc.doc.credentialSubject.meta.evidenceUrl}
+                  Read more
                 </Link>{" "}
-              </Box>
-              <Box mt="12px" whiteSpace={"pre-wrap"}>
-                <chakra.span fontWeight={"700"}>Description: </chakra.span>
-                {vc.doc.credentialSubject.meta.evidenceDescription}
               </Box>
             </Box>
           ))}

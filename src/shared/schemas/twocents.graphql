@@ -1,0 +1,25 @@
+type TwoCentsProfile
+  @createModel(accountRelation: SINGLE, description: "TwoCents Profile") {
+  userName: String! @string(minLength: 3, maxLength: 50)
+  bio: String! @string(minLength: 1, maxLength: 150)
+  address: String! @string(minLength: 42, maxLength: 42)
+  chainId: Int!
+}
+
+type TwoCentsVC
+  @createModel(accountRelation: LIST, description: "TwoCents VC") {
+  recipientAddress: String! @string(minLength: 42, maxLength: 42)
+  recipientProfileUrl: String! @string(minLength: 1, maxLength: 2048)
+  recipientDID: String! @string(minLength: 1, maxLength: 250)
+  issuerAddress: String! @string(minLength: 3, maxLength: 50)
+  issuerProfileUrl: String! @string(minLength: 1, maxLength: 2048)
+  issuerDID: String! @string(minLength: 1, maxLength: 250)
+  credentialSubject: String! @string(minLength: 1, maxLength: 100)
+  credentialDescription: String! @string(minLength: 1, maxLength: 250)
+  chainId: Int!
+  skills: [String!]! @list(maxLength: 30) @string(minLength: 1, maxLength: 50)
+  contributions: [String!]!
+    @list(maxLength: 30)
+    @string(minLength: 1, maxLength: 250)
+  credentialUrl: String! @string(minLength: 1, maxLength: 2048)
+}

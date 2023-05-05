@@ -14,6 +14,9 @@ export const COLLECTIONS = {
   PROJECT_FIRENDS: "project-friends",
   FEEDBACKS: "feedbacks",
   VC: "verified-credentials",
+  DID_SESSIONS: "did-sessions",
+  CREDENTIALS: "credentials",
+  CERAMIC_PROFILE: "ceramic-profile",
 };
 
 const repository = {
