@@ -72,11 +72,11 @@ export const VerifiedCredentialModal = ({ onClose, isOpen, onSubmit }) => {
                 Description <chakra.span color={"red"}> *</chakra.span>
               </Text>
 
-              <Input
+              <Textarea
                 mt={"20px"}
                 backgroundColor="white"
                 color="black"
-                placeholder="Skills separated with comma"
+                placeholder="Describe contribution in general"
                 type="text"
                 value={description || ""}
                 onChange={(e) => setDescription(e.target.value)}
@@ -91,7 +91,7 @@ export const VerifiedCredentialModal = ({ onClose, isOpen, onSubmit }) => {
                 mt={"20px"}
                 backgroundColor="white"
                 color="black"
-                placeholder="Skills separated with comma"
+                placeholder="List all contributions with link separated by comma"
                 type="text"
                 value={contributions || ""}
                 onChange={(e) => setContributions(e.target.value)}
