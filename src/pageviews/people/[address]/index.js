@@ -246,7 +246,11 @@ const ProfilePageView = ({ profile: _profile, initialAddress }) => {
           "get",
           `https://api.poap.tech/actions/scan/${updatedProfile.address}`,
           null,
-          true
+          true,
+          {
+            "X-API-Key":
+              "zR05W27apWVn7VANbbsEX0VtdzBXgBmv9UHRu6mtrJKYKeA7X2QIuNKg0I3jhSijxH44SQg0uhEzyBsM14WDA1mXdNegm90cbPbQtK5rtxdsUESlyc9EcFdFeT6YPf5O",
+          }
         );
         updatedProfile.poapData = response;
         setProfile({ ...updatedProfile });

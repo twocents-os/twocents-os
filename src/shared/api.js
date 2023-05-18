@@ -5,9 +5,18 @@ function apiHandler(state, methods, errorHandler) {
   this.state = state;
   this.methods = methods;
 
-  this.call = async (method, path, data = null, returnFullResponse = false) => {
+  this.call = async (
+    method,
+    path,
+    data = null,
+    returnFullResponse = false,
+    additionalHeaders = {}
+  ) => {
     try {
-      const headers = { "Content-Type": "application/json" };
+      const headers = {
+        "Content-Type": "application/json",
+        ...additionalHeaders,
+      };
 
       methods.startCallingApi();
       const res = await fetch(path, {
