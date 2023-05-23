@@ -1,6 +1,9 @@
 import erc721 from "@src/shared/abi/erc721.json";
 import erc20 from "@src/shared/abi/erc20.json";
 import erc721POF from "@src/shared/abi/erc721-pof.json";
+import erc1155CredentialMint from "@src/shared/abi/erc1155credentialmint.json";
+import erc721CredentialMint from "@src/shared/abi/erc721credentialmint.json";
+import erc20CredentialMint from "@src/shared/abi/erc20credentialmint.json";
 import { Contract, ethers } from "ethers";
 import { useProvider, useSigner } from "wagmi";
 import useErrorHandler from "@src/shared/error/useErrorHandler";
@@ -134,6 +137,98 @@ export const useWallet = () => {
     }
   };
 
+  const mint1155 = async (contractAddress, mintData) => {
+    if (!provider) {
+      throw new Error("Provider not init");
+    }
+    console.log(">>> Called", contractAddress, address);
+
+    const signer = await getSigner();
+    const connectedContract = new Contract(
+      contractAddress,
+      erc1155CredentialMint,
+      signer
+    );
+
+    console.log("=== starting generate transaction");
+    const { address, name, description, image, tokenId } = mintData;
+    console.log(">>> mint data", address, name, description, image, tokenId);
+    // return;
+    const txn = await connectedContract.mintCredentials(
+      address,
+      tokenId,
+      name,
+      description,
+      image
+    );
+
+    const log = await txn.wait(1);
+
+    console.log("=== transaction ready");
+    console.log(log.events);
+
+    return { hash: txn.hash };
+  };
+
+  const mint721 = async (contractAddress, mintData) => {
+    if (!provider) {
+      throw new Error("Provider not init");
+    }
+    console.log(">>> Called", contractAddress, address);
+
+    const signer = await getSigner();
+    const connectedContract = new Contract(
+      contractAddress,
+      erc721CredentialMint,
+      signer
+    );
+
+    console.log("=== starting generate transaction");
+    const { address, name, description, image } = mintData;
+    console.log(">>> mint data", address, name, description, image);
+    // return;
+    const txn = await connectedContract.mintCredentials(
+      address,
+      name,
+      description,
+      image
+    );
+
+    const log = await txn.wait(1);
+
+    console.log("=== transaction ready");
+    console.log(log.events);
+
+    const [from, to, tokenId] = log.events[0].args;
+    return { hash: txn.hash, tokenId: tokenId.toNumber() };
+  };
+
+  const mint20 = async (contractAddress, mintData) => {
+    if (!provider) {
+      throw new Error("Provider not init");
+    }
+    console.log(">>> Called", contractAddress, address);
+
+    const signer = await getSigner();
+    const connectedContract = new Contract(
+      contractAddress,
+      erc20CredentialMint,
+      signer
+    );
+
+    console.log("=== starting generate transaction");
+    const { address, amount } = mintData;
+    // return;
+    const txn = await connectedContract.mintCredentials(address, amount);
+
+    const log = await txn.wait(1);
+
+    console.log("=== transaction ready");
+    console.log(log.events);
+
+    return { hash: txn.hash };
+  };
+
   return {
     getContractSymbol,
     mintIoU,
@@ -141,5 +236,8 @@ export const useWallet = () => {
     buyBack,
     resolveAddress,
     provider,
+    mint1155,
+    mint721,
+    mint20,
   };
 };

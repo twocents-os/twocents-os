@@ -17,6 +17,7 @@ export const COLLECTIONS = {
   DID_SESSIONS: "did-sessions",
   CREDENTIALS: "credentials",
   CERAMIC_PROFILE: "ceramic-profile",
+  ON_CHAIN_CREDENTIALS: "on-chain-credentials",
 };
 
 const repository = {
