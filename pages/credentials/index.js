@@ -13,7 +13,7 @@ export function CredentialPage({ data, error }) {
       </Head>
       <Box>
         {error && <Box>Something went wrong: {error}</Box>}
-        {!error && <CredentialsPageView credentials={data.credentials} />}
+        {!error && <CredentialsPageView users={data.users} />}
       </Box>
     </>
   );
@@ -31,15 +31,42 @@ export async function getServerSideProps(context) {
         { skills: searchRegex },
       ],
     };
-    const credentials = await repository.findManyDoc(
+
+    const query = [
+      {
+        $match: filter,
+      },
+
+      {
+        $group: {
+          _id: "$recipientAddress",
+          count: { $count: {} },
+          credentials: { $push: "$$ROOT" },
+        },
+      },
+
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "address",
+          as: "user",
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+    ];
+
+    const users = await repository.aggregateQuery(
       COLLECTIONS.CREDENTIALS,
-      filter
+      query
     );
 
     return {
       props: {
         data: {
-          credentials,
+          users,
         },
       },
     };
