@@ -21,11 +21,14 @@ import frontUtils from "@src/shared/front-utils";
 import { useWallet } from "@src/shared/useWallet";
 import { useNetwork } from "wagmi";
 import useErrorHandler from "@src/shared/error/useErrorHandler";
+import { useRouter } from "next/router";
 
 const MintNewNFT = ({ changeState, setCredentialData, ...props }) => {
   const errorHandler = useErrorHandler();
   const placeTag = "pof-MintNewNFT";
   const [{ data }] = useNetwork();
+  const router = useRouter();
+
   const contractTypes = [
     {
       value: "ERC721",
@@ -43,7 +46,6 @@ const MintNewNFT = ({ changeState, setCredentialData, ...props }) => {
       icon: "polygon.png",
     },
   ];
-  const walletV1 = useWallet();
   const api = useApi();
   const [state] = usePageState();
   const [formValue, setFormValue] = useState({});
@@ -93,6 +95,13 @@ const MintNewNFT = ({ changeState, setCredentialData, ...props }) => {
   useEffect(() => {
     console.log(">>>Netwrok>>>", data);
   }, [data]);
+
+  useEffect(() => {
+    if (!router?.query?.address) {
+      return;
+    }
+    handleFieldChange("receiverAddress", router.query.address);
+  }, [router.query]);
 
   const isFormValid = async () => {
     if (!state.currentAddress) {
@@ -308,7 +317,7 @@ const MintNewNFT = ({ changeState, setCredentialData, ...props }) => {
               cursor={"pointer"}
               as="a"
               target="_blank"
-              href="https://notion.so"
+              href="https://peppered-wanderer-386.notion.site/On-Chain-Credentials-Smart-Contract-Examples-95717a4ad29640de9891575e516bb8cc"
             >
               mintCredentials
             </chakra.span>{" "}

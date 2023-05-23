@@ -32,6 +32,8 @@ import ProfileFollowButton from "@src/shared/follow/ProfileFollowButton";
 import Router, { useRouter } from "next/router";
 
 import VerifiedCredentials from "@src/pageviews/people/[address]/ProfileTabSection/VerifiedCredentials";
+import OnChainCredentialsList from "./ProfileTabSection/OnChainCredentialsList";
+import SendOnChainCredentialsSection from "./SendOnChainCredentialsSection";
 
 const ProfilePageView = ({ profile: _profile, initialAddress }) => {
   const errorHandler = useErrorHandler();
@@ -53,6 +55,10 @@ const ProfilePageView = ({ profile: _profile, initialAddress }) => {
   const [receivedIOUs, setReceivedIOUs] = useState([]);
   const [mintedPOFs, setPOFsMinted] = useState([]);
   const [receivedPOFs, setPOFsReceived] = useState([]);
+  const [mintedOnChainCredentials, setOnChainCredentialsMinted] = useState([]);
+  const [receivedOnChainCredentials, setOnChainCredentialsReceived] = useState(
+    []
+  );
   const [selectedTabIndex, setSelectedTabIndex] = useState(null);
   const api = useApi();
   const router = useRouter();
@@ -148,6 +154,19 @@ const ProfilePageView = ({ profile: _profile, initialAddress }) => {
       icon: faPaperclip,
       count: profile?.vcs?.length,
     },
+    {
+      id: 8,
+      queryId: "onchaincreds",
+      title: "On Chain Credentials",
+      component: OnChainCredentialsList,
+      props: {
+        received: receivedOnChainCredentials,
+        minted: mintedOnChainCredentials,
+      },
+      icon: faHandshake,
+      count:
+        receivedOnChainCredentials?.length + mintedOnChainCredentials?.length,
+    },
   ];
 
   const defaultTab = tabs.find((tab) => tab.isDefault);
@@ -216,6 +235,14 @@ const ProfilePageView = ({ profile: _profile, initialAddress }) => {
         );
         setMintedIOUs(response.minted);
         setReceivedIOUs(response.received);
+
+        //on chain custom credentials
+        response = await api.call(
+          "get",
+          `/api/on-chain-credentials/fetch-on-chain-credentials-of-address?address=${updatedProfile.address}`
+        );
+        setOnChainCredentialsMinted(response.minted);
+        setOnChainCredentialsReceived(response.received);
 
         //get main user data
         response = await api.call(
@@ -390,6 +417,11 @@ const ProfilePageView = ({ profile: _profile, initialAddress }) => {
             <ProfileInfoSection profile={profile} />
             <ProfileActionSection profile={profile} mt="12px" />
             <SendPOFSection
+              profile={profile}
+              display={["none", "none", "block"]}
+              mt="24px"
+            />
+            <SendOnChainCredentialsSection
               profile={profile}
               display={["none", "none", "block"]}
               mt="24px"

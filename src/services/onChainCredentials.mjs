@@ -25,7 +25,23 @@ const submitOnChainCredential = async (data) => {
   return repository.saveDoc(COLLECTIONS.ON_CHAIN_CREDENTIALS, dataToSave);
 };
 
+const fetchOnChainCredentialsMintedByAddress = (address) => {
+  const searchRegex = new RegExp(`^${address}$`, "i");
+  return repository.findManyDoc(COLLECTIONS.ON_CHAIN_CREDENTIALS, {
+    mintedBy: searchRegex,
+  });
+};
+
+const fetchOnChainCredentialsReceivedByAddress = (address) => {
+  const searchRegex = new RegExp(`^${address}$`, "i");
+  return repository.findManyDoc(COLLECTIONS.ON_CHAIN_CREDENTIALS, {
+    receiverAddress: searchRegex,
+  });
+};
+
 const exports = {
   submitOnChainCredential,
+  fetchOnChainCredentialsMintedByAddress,
+  fetchOnChainCredentialsReceivedByAddress,
 };
 export default exports;
